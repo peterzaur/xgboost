@@ -106,7 +106,11 @@ def _load_lib():
     lib_path = find_lib_path()
     if len(lib_path) == 0:
         return None
-    lib = ctypes.cdll.LoadLibrary(lib_path[0])
+    if os.environ.get('LIBC_OVERRIDE') is None:
+        print(lib_path[0])
+        lib = ctypes.cdll.LoadLibrary(lib_path[0])
+    else:   
+        lib = ctypes.cdll.LoadLibrary(os.environ['LIBC_OVERRIDE'])
     lib.XGBGetLastError.restype = ctypes.c_char_p
     return lib
 
